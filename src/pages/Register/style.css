@@ -45,3 +45,9 @@ input[type="password"] {
 input[type="text"] {
   margin-top: 8px;
 }
+.alert {
+  width: 280px;
+  font-size: 11px;
+  text-align: center;
+
+}

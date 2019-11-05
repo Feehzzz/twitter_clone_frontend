@@ -7,46 +7,49 @@ import './style.css';
 
 export default class Login extends Component {
     state = {
-        email: '',
-        password: ''
-
+        error: ''
     };
 
     handleSubmit = async e => {
         e.preventDefault();
 
-        const { email, password } = this.state;
+        const formData = new FormData(e.target);
+		const data = Object.fromEntries(formData)
+        const { password, email } = data
+        if(!email || !password) return this.setState({error: "Preencha todos os campos"})
         
-        if (!email.length || !password.length) return;
-        const res = await api.post('users/auth', {
-            email, 
-            password
-        })
-
-        if(res.status === 200) {
-            localStorage.setItem('token', res.data.token);
-            localStorage.setItem('twitter:username', res.data.user.username);
-            this.props.history.push('/timeline')
+        
+        try {
+            const res = await api.post('users/auth', {
+                email, 
+                password
+            })
+            if(res.status === 200) {
+                localStorage.setItem('token', JSON.stringify(res.data.token));
+                localStorage.setItem('twitter:username', res.data.user.username);
+                this.props.history.push('/timeline')
+            }
+            
+        } catch (error) {
+            this.setState({
+                error: error.response.data.error
+            })
+            
         }
+ 
     };
 
-    handleInput = e => {
-        this.setState({[e.target.name]: e.target.value});
-    };
-    
-    
   render() {
     return (
         <div className="login-wrapper">
+            {this.state.error ? <div className="alert alert-danger" role="alert">{this.state.error}</div> : null }
             <img src={twitterlogo} alt="twitter_clone-logo" />
             <form onSubmit={this.handleSubmit}>
                 <input 
-                value={this.state.email}
-                onChange={this.handleInput}
+                name="email"
                 placeholder="E-mail"/>
                 <input type="password"
-                value={this.state.password}
-                onChange={this.handleInput}
+                name="password"
                 placeholder="Senha"/>
                 <button type="submit">Entrar</button>
             </form>

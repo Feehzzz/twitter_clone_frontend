@@ -41,10 +41,15 @@
 }
 .row a {
   font-size: 14px;
-  padding: 0 32px;
-}
-
+  padding: 10px 32px;
+} 
 
 input[type="password"] {
   margin-top: 8px;
+}
+
+.alert {
+  width: 280px;
+  font-size: 11px;
+  text-align: center;
 }
